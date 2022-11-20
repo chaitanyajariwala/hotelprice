@@ -9,6 +9,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Scanner;
+import java.util.Set;
 import java.text.SimpleDateFormat;
 import java.io.FileWriter;
 // import java.util.regex.Matcher;
@@ -48,44 +50,44 @@ public class WebCrawler {
         return url;
     }
 
-	public String fetchHtml(String url, String name){
-		driver.get(url);
-		try {
-			Thread.sleep(15000);
-		}catch (Exception e) {
-		}
-		String s = driver.getPageSource();
+	// public String fetchHtml(String url, String name){
+	// 	driver.get(url);
+	// 	try {
+	// 		Thread.sleep(15000);
+	// 	}catch (Exception e) {
+	// 	}
+	// 	String s = driver.getPageSource();
 		
-		try {
-			FileWriter myWriter = new FileWriter("webpages\\" + name + ".html");
-			myWriter.write(s);
-			myWriter.close();
-		}catch (Exception e) {
-		}
-		return s;
-	}
+	// 	try {
+	// 		FileWriter myWriter = new FileWriter("webpages\\" + name + ".html");
+	// 		myWriter.write(s);
+	// 		myWriter.close();
+	// 	}catch (Exception e) {
+	// 	}
+	// 	return s;
+	// }
 
-	public void getWordFrequency(String html, int hotelIndex) {
-		Document doc = Jsoup.parse(html);
-		String text = doc.body().text();
-		String[] words = text.split(" ");
+	// public void getWordFrequency(String html, int hotelIndex) {
+	// 	Document doc = Jsoup.parse(html);
+	// 	String text = doc.body().text();
+	// 	String[] words = text.split(" ");
 
-		//store word frequencies for current document
-		Map<String, Integer> _wordFrequencyMap = new HashMap<>();
-		for (String word : words) {
-			if (wordFrequency.containsKey(word)) {
-				_wordFrequencyMap.put(word, _wordFrequencyMap.get(word) + 1);
-			} else {
-				_wordFrequencyMap.put(word, 1);
-			}
-		}
+	// 	//store word frequencies for current document
+	// 	Map<String, Integer> _wordFrequencyMap = new HashMap<>();
+	// 	for (String word : words) {
+	// 		if (wordFrequency.containsKey(word)) {
+	// 			_wordFrequencyMap.put(word, _wordFrequencyMap.get(word) + 1);
+	// 		} else {
+	// 			_wordFrequencyMap.put(word, 1);
+	// 		}
+	// 	}
 
-		//put map _wordFrequencyMap with current document
-		wordFrequency.put(hotelIndex, _wordFrequencyMap);
-		// createInvertedIndex(words, hotelIndex);
-		// System.out.println(wordFrequency.toString());
-		// System.out.println(invertedIndex.indexList.toString());
-	}
+	// 	//put map _wordFrequencyMap with current document
+	// 	wordFrequency.put(hotelIndex, _wordFrequencyMap);
+	// 	// createInvertedIndex(words, hotelIndex);
+	// 	// System.out.println(wordFrequency.toString());
+	// 	// System.out.println(invertedIndex.indexList.toString());
+	// }
 
 	// public void createInvertedIndex(String[] words, int hotelIndex) {
 	// 	invertedIndex.createIndex(words, hotelIndex);
@@ -111,7 +113,7 @@ public class WebCrawler {
 		String url = webCrawler.buildURL(new Date(), new Date(), 2);
 		String name = "start";
 		
-		String html = webCrawler.fetchHtml(url, name);
+		String html = HTMLUtils.fetchHtml(webCrawler.driver, url, name);
 		// class="kzGk"
 
 		// webCrawler.parseHtml(html);
@@ -124,14 +126,26 @@ public class WebCrawler {
 		System.out.println("Creating Inverted index...");
 		InvertedIndex invertedIndex = new InvertedIndex(HotelList.list);
 		invertedIndex.createIndex();
+
+		String[] keywords = {"which", "making"};
+		Set<Integer> documentSet = invertedIndex.search(keywords);
+		Map<Integer, Integer> scoreMap = wf.calculateScores(keywords, documentSet);
+
+		PageRank pagerank = new PageRank(scoreMap);
+		pagerank.rankPages();
+		List<Integer> documentIndexList = pagerank.getTopKDocuments(10);
+
+
+		// Scanner sc = new Scanner(System.in);
+		
 	}
 	
-	public void abc() {
-		for (Hotel hotel : HotelList.list) {
-			System.out.println(hotel.index + " " + Arrays.toString(hotel.words));
-			// System.out.println(hotel.name);
-			String html = this.fetchHtml(hotel.url, hotel.name);
-			this.getWordFrequency(html, hotel.index);
-		}
-	}
+	// public void abc() {
+	// 	for (Hotel hotel : HotelList.list) {
+	// 		System.out.println(hotel.index + " " + Arrays.toString(hotel.words));
+	// 		// System.out.println(hotel.name);
+	// 		String html = this.fetchHtml(hotel.url, hotel.name);
+	// 		this.getWordFrequency(html, hotel.index);
+	// 	}
+	// }
 }

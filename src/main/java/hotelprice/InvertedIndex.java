@@ -86,31 +86,23 @@ public class InvertedIndex {
         for (Hotel hotel: hotelList) {
             addToIndex(hotel);
         }
-        System.out.println(indexList.toString());
+        // System.out.println(indexList.toString());
     }
 
-    public Map<String, Set<String>> search(List<String> words) {
-        Map<String, Set<String>> wordToDocumentMap = new HashMap<>();
+    //return set of document indexes which contains the following words
+    public Set<Integer> search(String[] words) {
+        Set<Integer> documentSet = new HashSet<>();
         for (String w : words) {
             String word = w.toLowerCase();
             List<Integer> documentIndex = indexList.get(word);
-            Set<String> urlSet = new HashSet<>();
             if (documentIndex != null) {
                 for (int docIndex : documentIndex) {
-                    urlSet.add(hotelList.get(docIndex).url);
+                    documentSet.add(docIndex);
                 }
             }
-            wordToDocumentMap.put(word, urlSet);
-            // System.out.print(word);
-            // for (String f : wordToDocumentMap) {
-            //     System.out.print(" " + f);
-            // }
-            // System.out.println("");
         }
-        return wordToDocumentMap;
+        return documentSet;
     }
-
-    
 
     public static void main(String[] args) {
         try {

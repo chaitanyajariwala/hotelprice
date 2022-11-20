@@ -3,13 +3,14 @@ package hotelprice;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
 
 public class WordFrequency {
-	Map<Integer, Map<String, Integer>> wordFrequency = new HashMap<>();
+	Map<Integer, Map<String, Integer>> docToWordFrequencyMap = new HashMap<>();
     List<Hotel> hotelList;
     
     public WordFrequency(List<Hotel> hotelList) {
@@ -33,8 +34,25 @@ public class WordFrequency {
             }
             
             //put map _wordFrequencyMap with current document
-            wordFrequency.put(hotelIndex, _wordFrequencyMap);
+            docToWordFrequencyMap.put(hotelIndex, _wordFrequencyMap);
         }
 		// System.out.println(wordFrequency.toString());
 	}
+
+    public Map<Integer, Integer> calculateScores(String[] keywords, Set<Integer> documentSet) {
+        Map<Integer, Integer> documentScoreMap = new HashMap<>();
+        for (int documentIndex: documentSet) {
+            Map<String, Integer> wordFrequencyMap = docToWordFrequencyMap.get(documentIndex);
+            int score = 0;
+            // System.out.println(wordFrequencyMap.toString());
+            for (String keyword: keywords) {
+                if (wordFrequencyMap.containsKey(keyword)) {
+                    score += wordFrequencyMap.get(keyword);
+                    // score+=count;
+                }
+            }
+            documentScoreMap.put(documentIndex, score);
+        }
+        return documentScoreMap;
+    }
 }
