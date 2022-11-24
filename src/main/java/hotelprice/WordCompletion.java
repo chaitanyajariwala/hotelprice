@@ -7,9 +7,17 @@ import java.util.Map;
 
 
 public class WordCompletion {
-    // suggestWordCompletion () {
-    //     new Trie (wordFrequenctMap);
-    // }
+    List<String> words;
+    public WordCompletion (Map<String, Integer> words) {
+        this.words = new ArrayList<>(words.keySet());
+    }
+    List<String> suggestWordCompletion (String word) {
+        if (!words.contains(word)) {
+            Trie trie = new Trie(words);
+            return trie.completeWord(word);
+        }
+        return new ArrayList<>();
+    }
 }
 
 
