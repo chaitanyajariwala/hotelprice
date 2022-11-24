@@ -10,6 +10,7 @@ import org.jsoup.nodes.Document;
 
 
 public class WordFrequency {
+    //first integer is for documentIndex, and map represents word to count mapping. count is document-wise for the given word.
 	Map<Integer, Map<String, Integer>> docToWordFrequencyMap = new HashMap<>();
     List<Hotel> hotelList;
     
@@ -54,5 +55,8 @@ public class WordFrequency {
             documentScoreMap.put(documentIndex, score);
         }
         return documentScoreMap;
+    }
+    public void printIndex () {
+        this.docToWordFrequencyMap.forEach((key, value) -> System.out.println(key + ":" + value));
     }
 }

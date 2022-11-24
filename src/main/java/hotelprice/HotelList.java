@@ -14,10 +14,12 @@ import org.openqa.selenium.WebDriver;
 public class HotelList {
     static List<Hotel> list = new ArrayList<Hotel>();
     public void addDocumentToList(Document doc, WebDriver driver) {
-        Elements elements = doc.getElementsByClass("kzGk");
+		Elements elements = doc.getElementsByClass("kzGk");
+		System.out.println("here. elements: " + elements.size());
+		// System.out.println(doc.html());
 		int count = 0;
 		for (Element element : elements) {
-			if (count ==2) break;
+			if (count == 1) break;
 			count++;
 			int index = list.size();
 			String price = element.getElementsByClass("zV27-price").first().text();
@@ -31,8 +33,8 @@ public class HotelList {
 			String[] words = text.split(" ");
 			words = Arrays.asList(words).stream().map(String::toLowerCase).toArray(String[]::new);
 
-			System.out.println("Crawling: " + name);
-			list.add(new Hotel(index, price, location, score, name, url, words));    
+			System.out.println("Crawled: " + name);
+			list.add(new Hotel(index, price, location, score, name, url, words)); 
 		}
     }
 	public String fetchTextFromUrl(WebDriver driver, String url, String name) {

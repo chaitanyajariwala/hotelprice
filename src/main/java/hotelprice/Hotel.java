@@ -20,4 +20,9 @@ public class Hotel {
         // this.pageData = pageData;
         this.words = words;
     }
+    @Override
+    public String toString() {
+        // TODO Auto-generated method stub
+        return name;
+    }
 }

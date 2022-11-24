@@ -107,6 +107,21 @@ public class WebCrawler {
 	// 	}
 	// }
 
+	public void runCrawler () {
+		// WebCrawler webCrawler = new WebCrawler(new Date(), new Date(), 2);
+        
+		String url = this.buildURL(new Date(), new Date(), 2);
+		String name = "start";
+		
+		String html = HTMLUtils.fetchHtml(this.driver, url, name);
+		// class="kzGk"
+
+		// webCrawler.parseHtml(html);
+		Document doc = HTMLUtils.parse(html);
+		HotelList hotelListObj = new HotelList();
+		hotelListObj.addDocumentToList(doc, this.driver);
+	}
+
 	public static void main(String[] args) {
 		WebCrawler webCrawler = new WebCrawler(new Date(), new Date(), 2);
         
@@ -121,6 +136,7 @@ public class WebCrawler {
 		HotelList hotelListObj = new HotelList();
 		hotelListObj.addDocumentToList(doc, webCrawler.driver);
 		// webCrawler.abc();
+		
 		WordFrequency wf = new WordFrequency(HotelList.list);
 		wf.setWordFrequencies();
 		System.out.println("Creating Inverted index...");

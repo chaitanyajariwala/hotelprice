@@ -35,6 +35,7 @@ public class InvertedIndex {
             "what", "when", "where", "which", "while", "who", "whom", "why",
             "will", "with", "would", "yet", "you", "your");
 
+    //mapping of word with list of documentIndex where word appears.
     Map<String, List<Integer>> indexList = new HashMap<String, List<Integer>>();
     List<Hotel> hotelList;
     // List<Hotel> indexList = new ArrayList<>();
@@ -102,6 +103,10 @@ public class InvertedIndex {
             }
         }
         return documentSet;
+    }
+
+    public void printIndex () {
+        System.out.println(this.indexList.toString());
     }
 
     public static void main(String[] args) {
