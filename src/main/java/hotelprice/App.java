@@ -1,7 +1,10 @@
 package hotelprice;
 
 import java.util.Scanner;
+import java.util.Set;
 import java.util.Date;
+import java.util.List;
+import java.util.Map;
 import java.util.Arrays;
 import java.util.Collections;
 
@@ -33,7 +36,7 @@ public final class App {
                 System.out.println("=================================================");
                 System.out.println("| Options:                                       |");
                 System.out.println("|        1. Crawl the site                       |");
-                System.out.println("|        2. enter search keywords                |");
+                System.out.println("|        2. search pages                         |");
                 System.out.println("|        3. Create word freq and inverted index  |");
                 System.out.println("|        4. Exit                                 |");
                 System.out.println("=================================================");
@@ -49,7 +52,7 @@ public final class App {
                         Thread.sleep(1000);
                         break;
                     case 2:
-                        keywords = getSearchKeywords(sc);
+                        search(sc);
                         // System.out.println("Option 2 selected");
                         Thread.sleep(1000);
                         break;
@@ -58,10 +61,6 @@ public final class App {
                         Thread.sleep(1000);
                         break;
                     case 4:
-                        printIndex();
-                        Thread.sleep(1000);
-                        break;
-                    case 5:
                         System.out.println("Exiting...");
                         Thread.sleep(1000);
                         break;
@@ -73,6 +72,17 @@ public final class App {
                 sc.nextLine();
             }
         }
+    }
+
+    void search(Scanner sc) {
+        keywords = getSearchKeywords(sc);
+        Set<Integer> documentSet = invertedIndex.search(keywords);
+		Map<Integer, Integer> scoreMap = wf.calculateScores(keywords, documentSet);
+        System.out.println(scoreMap.toString());
+		PageRank pagerank = new PageRank(scoreMap);
+		pagerank.rankPages();
+		List<Integer> documentIndexList = pagerank.getTopKDocuments(10);
+        System.out.println(documentIndexList.toString());
     }
 
     void printIndex () {
