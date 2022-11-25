@@ -8,21 +8,22 @@ import java.util.Set;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
-
 public class WordFrequency {
-    //first integer is for documentIndex, and map represents word to count mapping. count is document-wise for the given word.
-	Map<Integer, Map<String, Integer>> docToWordFrequencyMap = new HashMap<>();
+    // first integer is for documentIndex, and map represents word to count mapping.
+    // count is document-wise for the given word.
+    Map<Integer, Map<String, Integer>> frequencyMapOfEachHotel = new HashMap<>();
     List<Hotel> hotelList;
-    
+
     public WordFrequency(List<Hotel> hotelList) {
         this.hotelList = hotelList;
     }
+
     public void setWordFrequencies() {
-        for (Hotel hotel: hotelList) {
+        for (Hotel hotel : hotelList) {
             String[] words = hotel.words;
             int hotelIndex = hotel.index;
-            
-            //store word frequencies for current document
+
+            // store word frequencies for current document
             Map<String, Integer> _wordFrequencyMap = new HashMap<>();
             for (String w : words) {
                 String word = w.toLowerCase();
@@ -33,20 +34,21 @@ public class WordFrequency {
                     _wordFrequencyMap.put(word, 1);
                 }
             }
-            
-            //put map _wordFrequencyMap with current document
-            docToWordFrequencyMap.put(hotelIndex, _wordFrequencyMap);
+
+            // put map _wordFrequencyMap with current document
+            frequencyMapOfEachHotel.put(hotelIndex, _wordFrequencyMap);
         }
-		// System.out.println(wordFrequency.toString());
-	}
+        // System.out.println(wordFrequency.toString());
+    }
 
     public Map<Integer, Integer> calculateScores(String[] keywords, Set<Integer> documentSet) {
+        // TODO: instead of map we should have used priority queue here.
         Map<Integer, Integer> documentScoreMap = new HashMap<>();
-        for (int documentIndex: documentSet) {
-            Map<String, Integer> wordFrequencyMap = docToWordFrequencyMap.get(documentIndex);
+        for (int documentIndex : documentSet) {
+            Map<String, Integer> wordFrequencyMap = frequencyMapOfEachHotel.get(documentIndex);
             int score = 0;
             // System.out.println(wordFrequencyMap.toString());
-            for (String keyword: keywords) {
+            for (String keyword : keywords) {
                 if (wordFrequencyMap.containsKey(keyword)) {
                     score += wordFrequencyMap.get(keyword);
                     // score+=count;
@@ -56,7 +58,8 @@ public class WordFrequency {
         }
         return documentScoreMap;
     }
-    public void printIndex () {
-        this.docToWordFrequencyMap.forEach((key, value) -> System.out.println(key + ":" + value));
+
+    public void printIndex() {
+        this.frequencyMapOfEachHotel.forEach((key, value) -> System.out.println(key + ":" + value));
     }
 }

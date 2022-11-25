@@ -35,36 +35,11 @@ public class InvertedIndex {
             "what", "when", "where", "which", "while", "who", "whom", "why",
             "will", "with", "would", "yet", "you", "your");
 
-    //mapping of word with list of documentIndex where word appears.
+    // mapping of word with list of documentIndex where word appears.
+    // TODO: use hash set instead of List<integer> to avoid adding hotel at the end
+    // of the list, if we crawl the same page again.
     Map<String, List<Integer>> indexList = new HashMap<String, List<Integer>>();
     List<Hotel> hotelList;
-    // List<Hotel> indexList = new ArrayList<>();
-
-    // public void indexFile(String[] url) throws IOException {
-    //     int fileIndex = hotelList.indexOf(file.getPath());
-    //     if (fileIndex == -1) {
-    //         hotelList.add(file.getPath());
-    //         fileIndex = hotelList.size() - 1;
-    //     }
-
-    //     int pos = 0;
-    //     BufferedReader br = new BufferedReader(new FileReader(file));
-    //     for (String line = br.readLine(); line != null; line = br.readLine()) {
-    //         for (String _word : line.split("\\W+")) {
-    //             String word = _word.toLowerCase();
-    //             pos++;
-    //             if (stopwords.contains(word))
-    //                 continue;
-    //             List<Integer> idx = index.get(word);
-    //             if (idx == null) {
-    //                 idx = new LinkedList<Integer>();
-    //                 index.put(word, idx);
-    //             }
-    //             idx.add(fileIndex);
-    //         }
-    //     }
-    //     System.out.println("indexed " + file.getPath() + " " + pos + " words");
-    // }
 
     public void addToIndex(Hotel hotel) {
         String[] words = hotel.words;
@@ -72,8 +47,6 @@ public class InvertedIndex {
 
         for (String w : new HashSet<String>(Arrays.asList(words))) {
             String word = w.toLowerCase();
-            // if (stopwords.contains(word))
-            //     continue;
             List<Integer> idx = indexList.get(word);
             if (idx == null) {
                 idx = new LinkedList<Integer>();
@@ -84,13 +57,13 @@ public class InvertedIndex {
     }
 
     public void createIndex() {
-        for (Hotel hotel: hotelList) {
+        for (Hotel hotel : hotelList) {
             addToIndex(hotel);
         }
         // System.out.println(indexList.toString());
     }
 
-    //return set of document indexes which contains the following words
+    // return set of document indexes which contains the following words
     public Set<Integer> search(String[] words) {
         Set<Integer> documentSet = new HashSet<>();
         for (String w : words) {
@@ -105,30 +78,15 @@ public class InvertedIndex {
         return documentSet;
     }
 
-    public void printIndex () {
+    public void printIndex() {
         System.out.println(this.indexList.toString());
     }
 
     public static void main(String[] args) {
         try {
             InvertedIndex idx = new InvertedIndex(HotelList.list);
-            // System.out.println(HotelList.list);
-            // for (int i = 1; i < args.length; i++) {
-            //     idx.indexFile(new File(args[i]));
-            // }
-            // idx.search(Arrays.asList(args[0].split(",")));
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
-
-    // private class Tuple {
-    //     private int fileno;
-    //     private int position;
-
-    //     public Tuple(int fileno, int position) {
-    //         this.fileno = fileno;
-    //         this.position = position;
-    //     }
-    // }
 }
